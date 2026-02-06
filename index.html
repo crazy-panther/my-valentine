@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Valentine 💖</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Dancing+Script:wght@700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Lottie Player Script -->
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <style>
+        :root {
+            --primary-bg: #ffe4e6;
+            --text-color: #881337;
+            --accent-color: #e11d48;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Visuals: Custom Heart Cursor */
+        body {
+            font-family: 'Nunito', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffe4e6 0%, #ccfbf1 100%);
+            transition: background 1s ease;
+            position: relative;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23e11d48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>') 12 12, auto;
+        }
+
+        /* Heart Trail Effect */
+        .heart-trail {
+            position: absolute;
+            pointer-events: none;
+            animation: floatFade 1s linear forwards;
+            font-size: 16px;
+            z-index: 9999;
+            color: #e11d48;
+        }
+
+        @keyframes floatFade {
+            0% {
+                transform: scale(0.5) translateY(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.2) translateY(-20px);
+                opacity: 0;
+            }
+        }
+
+        /* Brighter Background Hearts */
+        .heart-bit {
+            position: absolute;
+            color: rgba(225, 29, 72, 0.6);
+            /* Increased opacity from 0.2 */
+            animation: floatUp 15s linear infinite;
+            font-size: 24px;
+            /* Slightly larger */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(110vh) scale(0.5);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            text-align: center;
+            position: absolute;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            z-index: 10;
+        }
+
+        /* Mobile Adjustments for Container */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+                width: 95%;
+            }
+
+            #valentine-view {
+                padding: 2rem 1rem;
+            }
+        }
+
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.9);
+            pointer-events: none;
+            display: none;
+        }
+
+        .visible {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            pointer-events: auto;
+            display: block;
+        }
+
+        /* 404 Styles */
+        #error-view h1 {
+            font-size: 8rem;
+            color: var(--accent-color);
+            line-height: 1;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+            text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 600px) {
+            #error-view h1 {
+                font-size: 5rem;
+            }
+
+            #error-view h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        #error-view h2 {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            font-size: 1.25rem;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Magic Aura for Yes Button */
+        #yes-btn {
+            position: relative;
+            background: #10b981;
+            /* Green for Yes */
+            overflow: hidden;
+        }
+
+        #yes-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            transform: scale(0);
+            transition: transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        #yes-btn:hover::before {
+            transform: scale(1);
+            animation: pulse-aura 1.5s infinite;
+        }
+
+        @keyframes pulse-aura {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* Shake Effect for No Button */
+        #no-btn {
+            background: #ef4444;
+            /* Red for No */
+            transition: all 0.2s ease;
+        }
+
+        #no-btn:active {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px) rotate(-5deg);
+            }
+
+            75% {
+                transform: translateX(5px) rotate(5deg);
+            }
+        }
+
+        #refresh-btn {
+            background-color: #0f766e;
+        }
+
+        /* Valentine View */
+        #valentine-view {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            /* Important for absolute button positioning */
+            width: 100%;
+            max-width: 600px;
+            /* Ensure height is set or content determines it, but better explicit for boundaries */
+            min-height: 400px;
+            display: flex;
+            /* Flexbox for centering content, but we need flow for button absolute */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #valentine-view h2 {
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            #valentine-view h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Lottie Container */
+        .proposal-lottie {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            /* Removed position: relative to allow No button to search recursively for valentine-view as containing block */
+            min-height: 120px;
+            margin-top: 1.5rem;
+        }
+
+        /* Mobile Controls */
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+                /* Stack vertically if needed, but side-by-side with smaller gap works too */
+                flex-direction: row;
+                gap: 1rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1.5rem;
+                /* Smaller padding */
+                font-size: 1.1rem;
+            }
+        }
+
+        #yes-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+            z-index: 100;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+        }
+
+        #yes-btn.aura-active {
+            box-shadow: 0 0 30px 10px rgba(16, 185, 129, 0.8);
+        }
+
+        #no-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.4);
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .shake {
+            animation: shake 0.5s;
+            animation-iteration-count: 1;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+
+            10% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+
+            20% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+
+            30% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+
+            40% {
+                transform: translate(1px, -1px) rotate(1deg);
+            }
+
+            50% {
+                transform: translate(-1px, 2px) rotate(-1deg);
+            }
+
+            60% {
+                transform: translate(-3px, 1px) rotate(0deg);
+            }
+
+            70% {
+                transform: translate(3px, 1px) rotate(-1deg);
+            }
+
+            80% {
+                transform: translate(-1px, -1px) rotate(1deg);
+            }
+
+            90% {
+                transform: translate(1px, 2px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(1px, -2px) rotate(-1deg);
+            }
+        }
+
+        /* Spotify Player - Mobile Optimized */
+        .spotify-wrapper {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .music-controls {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 5px 10px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .music-controls select {
+            padding: 3px 8px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            font-family: 'Nunito', sans-serif;
+            background: white;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            max-width: 120px;
+            /* Constrain width on mobile */
+        }
+
+        .toggle-player-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #spotify-frame-container {
+            width: 250px;
+            /* Slightly smaller for mobile safety */
+            height: 300px;
+            background: transparent;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: none;
+            transition: all 0.5s ease;
+        }
+
+        #spotify-frame-container.show {
+            display: block;
+            animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Loading & End Views */
+        #loading-view,
+        #end-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1500;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loading-view {
+            background: var(--primary-bg);
+        }
+
+        #end-view {
+            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+            z-index: 2001;
+        }
+
+        /* Card Popup Overlay */
+        #card-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            /* Darker for better focus */
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.8s ease;
+            flex-direction: column;
+            gap: 20px;
+            padding: 1rem;
+        }
+
+        #card-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .valentine-card {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transform: translateY(100px) rotateX(20deg);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            border: 8px solid #fecdd3;
+            box-shadow: 0 0 0 4px #fff inset;
+            overflow: hidden;
+            max-height: 80vh;
+            overflow-y: auto;
+            /* Scroll if content is too tall on small screens */
+        }
+
+        #card-overlay.open .valentine-card {
+            transform: translateY(0) rotateX(0deg);
+            opacity: 1;
+        }
+
+        .photo-frame {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem auto;
+            border-radius: 50%;
+            border: 4px solid var(--accent-color);
+            padding: 3px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .valentine-card h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #be123c;
+            margin-bottom: 1rem;
+        }
+
+        .valentine-card p {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1rem;
+            color: #4a044e;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .star-trail {
+            position: absolute;
+            pointer-events: none;
+            animation: twinkle 1s linear forwards;
+            font-size: 16px;
+            z-index: 9999;
+            color: gold;
+        }
+
+        @keyframes twinkle {
+            0% {
+                transform: scale(0.5) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.2) rotate(45deg);
+                opacity: 0;
+                top: 20px;
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .absolute-pos {
+            position: fixed !important;
+        }
+
+        /* Music Hint - More Attractive */
+        .music-hint {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: linear-gradient(135deg, #fff 0%, #ffe4e6 100%);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 10px 25px rgba(225, 29, 72, 0.25);
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1rem;
+            color: #be123c;
+            z-index: 1999;
+            pointer-events: none;
+            font-weight: 800;
+            transform-origin: right bottom;
+            animation: popHint 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite alternate;
+            border: 2px solid #fecdd3;
+        }
+
+        /* Gift Hint */
+        .gift-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 90px;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+            color: #be123c;
+            z-index: 1999;
+            pointer-events: none;
+            animation: slideIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            white-space: nowrap;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes popHint {
+            0% {
+                transform: scale(1) translateY(0);
+            }
+
+            100% {
+                transform: scale(1.1) translateY(-5px);
+            }
+        }
+
+        .music-hint::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-top: 10px solid white;
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.8rem;
+            color: rgba(136, 19, 55, 0.6);
+            z-index: 100;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Quiz Icon */
+        .gift-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            z-index: 2000;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: bounceGift 2s infinite;
+        }
+
+        @keyframes bounceGift {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .gift-icon:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        /* Quiz Modal */
+        #quiz-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 3000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        #quiz-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .quiz-card {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            border-radius: 24px;
+            border: 4px solid var(--accent-color);
+            text-align: center;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .quiz-card h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #be123c;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        .quiz-question {
+            margin-bottom: 1.5rem;
+            text-align: left;
+            padding: 1rem;
+            border-radius: 12px;
+            background: #fff1f2;
+            transition: background 0.3s;
+        }
+
+        .quiz-question.correct {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+        }
+
+        .quiz-question.wrong {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+        }
+
+        .quiz-question label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: #881337;
+        }
+
+        .quiz-question input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .quiz-question input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .feedback-msg {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            font-weight: 700;
+            min-height: 1.2em;
+        }
+
+        .feedback-msg.correct {
+            color: #10b981;
+        }
+
+        .feedback-msg.wrong {
+            color: #ef4444;
+        }
+
+        /* 3D Card / Book Styles */
+        .book-container {
+            perspective: 1500px;
+            width: 90vw;
+            max-width: 700px;
+            height: 80vh;
+            max-height: 500px;
+            position: relative;
+            z-index: 2000;
+        }
+
+        .book {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .page {
+            width: 50%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: left center;
+            transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+            background: white;
+            border-radius: 10px 0 0 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* The Cover Page (Flap) */
+        .page.cover {
+            z-index: 10;
+            left: 50%;
+            /* Starts on the right side covering the base */
+        }
+
+        .page.cover.open {
+            transform: rotateY(-180deg);
+            z-index: 10;
+            /* Stays on top while flipping */
+        }
+
+        .page-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            border-radius: 0 10px 10px 0;
+            /* Rounded on outer edge */
+            background: linear-gradient(to right, #fff5f5, #fff);
+            border: 2px solid #fecdd3;
+            overflow: hidden;
+        }
+
+        .face-front {
+            /* The Front Cover */
+            background: linear-gradient(135deg, #be123c 0%, #fb7185 100%);
+            color: white;
+            border-left: 5px solid #881337;
+            /* Binding effect */
+        }
+
+        .face-back {
+            /* Inside Left */
+            transform: rotateY(180deg);
+            border-right: 5px solid #eee;
+            /* Binding shadow */
+            background: white;
+            border-radius: 10px 0 0 10px;
+        }
+
+        /* The Base Page (Inside Right) */
+        .page.inside-right {
+            left: 50%;
+            width: 50%;
+            z-index: 5;
+            background: white;
+            border-radius: 0 10px 10px 0;
+            border: 2px solid #fecdd3;
+            border-left: none;
+            box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Responsive tweaks for mobile: Stack vertical or scale down */
+        @media (max-width: 768px) {
+            .book-container {
+                width: 95vw;
+                height: 70vh;
+                perspective: 2000px;
+            }
+
+            .page.inside-right,
+            .page.cover {
+                width: 100%;
+                left: 0;
+                border-radius: 10px;
+            }
+
+            .page.cover {
+                transform-origin: top center;
+            }
+
+            .page.cover.open {
+                transform: rotateX(180deg);
+                /* Flip up/down on mobile? Or just fade? */
+                /* Rotating vertically on mobile is tricky with layout flow. 
+                  Let's try a simpler 'Fade Out Cover' or just keep 3D but scale it small 
+               */
+                transform: rotateY(-180deg);
+                /* Stick to book, might need zoom out */
+            }
+
+            /* Actually for mobile vertical screen, a side-by-side book is too wide. 
+                Let's make the open book fit using zoom/scale 
+             */
+            .book-container.open-state {
+                /* transform: scale(0.6); */
+            }
+        }
+
+        /* Typography overrides for the card */
+        .book h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .book h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #be123c;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .book p {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #881337;
+            margin-bottom: 1rem;
+        }
+
+        .seal {
+            font-size: 3rem;
+            margin-top: 1rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        /* Inside Left */
+        .page-face.face-back {
+            justify-content: flex-start;
+            padding-top: 30px;
+        }
+
+        .photo-frame {
+            width: 180px;
+            /* Larger photo */
+            height: 180px;
+            margin-bottom: 15px;
+            border: 4px solid #fecdd3;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        .left-quote {
+            font-family: 'Dancing Script', cursive;
+            color: #be123c;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 15px;
+            text-align: center;
+            padding: 0 10px;
+            line-height: 1.4;
+        }
+
+        .yellow-flower {
+            font-size: 3rem;
+            margin-top: 20px;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+            animation: floatFlower 3s ease-in-out infinite;
+        }
+
+        @keyframes floatFlower {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-5px) rotate(5deg);
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-20px);
+            }
+
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Inside Right - Handwritten Letter */
+        .page.inside-right {
+            align-items: flex-start;
+            text-align: left;
+            padding: 2rem 1.5rem;
+        }
+
+        .handwritten-letter p {
+            font-family: 'Dancing Script', cursive;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            /* Small & heartfelt */
+            line-height: 1.3;
+            color: #881337;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .photo-frame {
+                width: 150px;
+                height: 150px;
+            }
+
+            .yellow-flower {
+                font-size: 2.5rem;
+            }
+
+            .handwritten-letter p {
+                font-size: 1rem;
+            }
+        }
+
+        /* Custom Music Button */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            border: 2px solid #e11d48;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, background 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: spin 4s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .music-btn.playing {
+            background: #ffe4e6;
+            animation-play-state: running;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="heart-bg" id="heart-bg"></div>
+    <!-- Music Hint -->
+    <div class="music-hint" id="music-hint">🎵 Pick a song for us first ! 💖 </div>
+    <!-- Gift Hint -->
+    <div class="gift-hint"></div>
+    <div class="spotify-wrapper">
+        <div class="music-controls"><button class="toggle-player-btn" id="toggle-spotify">💿</button><select
+                id="song-select">
+                <option value="breathless">Breathless</option>
+                <option value="thousand">A Thousand Years</option>
+                <option value="perfect">Perfect</option>
+            </select></div>
+        <div id="spotify-frame-container">
+        </div>
+    </div>
+    <div id="error-view" class="container visible">
+        <h1>404</h1>
+        <h2>Oops ! You seem lost... or are you?</h2><button id="refresh-btn" class="btn">Refresh Page</button>
+    </div>
+    <div id="valentine-view" class="container hidden">
+        <div class="proposal-lottie"><dotlottie-player
+                src="https://lottie.host/bb05bfb3-afb5-448b-be67-2d4b6e071900/R4EYvsQ12M.lottie"
+                background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay></dotlottie-player>
+        </div>
+        <h2>Will you be my Valentine? </h2>
+        <div class="controls"><button id="yes-btn" class="btn">YES</button><button id="no-btn" class="btn">NO</button>
+        </div>
+    </div>
+    <div id="loading-view" class="hidden"><dotlottie-player
+            src="https://lottie.host/c348ee01-0227-44d5-a896-52a5aceb0a6e/QXYlCkCiG9.lottie" background="transparent"
+            speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+        <h2
+            style="color:white; margin-top:20px; font-family:'Dancing Script'; text-align:center; padding: 0 1rem; text-shadow: 2px 2px 0 #881337, -1px -1px 0 #881337, 2px -1px 0 #881337, -1px 2px 0 #881337;">
+            Special delivery for you...</h2>
+    </div>
+    <div id="card-overlay" class="hidden">
+        <!-- 3D Book Container -->
+        <div class="book-container">
+            <div class="book">
+                <!-- The Cover Page (Front & Inside Left) -->
+                <div class="page cover" id="book-cover">
+                    <!-- Front Cover -->
+                    <div class="page-face face-front">
+                        <h1 style="font-size: 3rem; text-align: center;">To My<br>Soul Mate</h1>
+                        <div class="seal">❤️</div>
+                        <p style="margin-top: 20px; color: rgba(255,255,255,0.8);">Open this card...</p>
+                    </div>
+                    <!-- Inside Left -->
+                    <div class="page-face face-back">
+                        <div class="photo-frame">
+                            <!-- Using local image as requested -->
+                            <img src="img/us.jpg" alt="Us" id="custom-photo" referrerpolicy="no-referrer"
+                                onerror="this.src='https://placehold.co/600x400/pink/white?text=Our+Photo'">
+                        </div>
+
+                        <div class="left-quote">
+                            "Forever isn’t enough<br>for someone like you."<br>💛
+                        </div>
+
+                        <div class="yellow-flower">🌻</div>
+                    </div>
+                </div>
+
+                <!-- The Base Page (Inside Right) -->
+                <div class="page inside-right handwritten-letter">
+                    <h2
+                        style="font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: #be123c; margin-bottom: 1rem; align-self: center;">
+                        Sudu Manika,</h2>
+                    <p>
+                        You’re the most amazing soul I’ve ever met in my life. Every laugh, every little moment we
+                        share, every call… they all stay with me deeply.
+                    </p>
+                    <p>
+                        Spending time with you, whether we’re close or far, always reminds me that love isn’t about a
+                        single day. It’s about choosing you every single second that passes.
+                    </p>
+                    <p>
+                        I don’t need Valentine’s Day to tell you how much you mean to me. Every memory, every smile,
+                        every quiet moment… they’re mine to hold forever.
+                    </p>
+                    <p>
+                        You’ve touched my life in ways no one else ever could. Whatever happens, my heart is quietly,
+                        endlessly yours.
+                    </p>
+                    <div class="heart-seal" style="margin-top:10px; font-size:2rem; align-self: flex-end;">💋</div>
+                </div>
+            </div>
+        </div>
+        <button id="back-btn" class="btn"
+            style="background:white; color:var(--text-color); margin-top: 20px; z-index: 2001; position: relative;">Close
+            Card</button>
+    </div>
+    <div id="end-view" class="hidden"><dotlottie-player
+            src="https://lottie.host/309794ac-bd87-4d41-bbfc-f1c8285696bd/D2iYy0Om4j.lottie" background="transparent"
+            speed="1" style="width: 100%; height: 500px;" autoplay></dotlottie-player>
+        <h2 style="color: #be123c; font-size: 2rem;">Love you forever ! ❤️</h2>
+        <p
+            style="color: #881337; font-family: 'Dancing Script', cursive; font-size: 1.8rem; margin-top: 15px; font-weight: bold;">
+            With all my love,
+            <br>Your Soul Mate (P.M) 💖
+        </p>
+    </div>
+
+    <!-- New Gift View -->
+    <div id="gift-view" class="container hidden" style="background: var(--primary-bg); flex-direction: column;">
+        <h2 style="font-family: 'Dancing Script'; color: #be123c; font-size: 2rem; margin-bottom: 20px;">I have one more
+            surprise...</h2>
+        <div id="open-gift-trigger" style="cursor: pointer; transition: transform 0.3s ease;">
+            <dotlottie-player src="https://lottie.host/7041cf67-0eaa-4bc9-898b-0e3ac79ea7e0/Fj9wKDgvgr.lottie"
+                background="transparent" speed="1" style="width: 300px; height: 300px;" loop
+                autoplay></dotlottie-player>
+            <p style="text-align: center; color: #881337; font-weight: bold; margin-top: 10px;">Click on the box to Open
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">Created by your soul mate (P.M)</div>
+    <!-- Initial gift icon removed -->
+    <div id="quiz-overlay">
+        <div class="quiz-card"><button class="close-quiz" id="close-quiz">×</button>
+            <h2>Soul Mate Quiz 💖</h2>
+            <p style="margin-bottom: 20px;">Answer these to win a special gift !</p>
+            <div id="quiz-container">
+                < !-- Questions injected by JS -->
+            </div><button id="claim-gift-btn" class="btn hidden"
+                style="margin-top: 20px; background: gold; color: #881337;">Claim Gift 🎁</button>
+        </div>
+    </div>
+
+    <!-- Success Overlay -->
+    <div id="success-overlay" class="hidden"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 2rem;">
+        <h1
+            style="font-family: 'Dancing Script'; font-size: 3rem; color: #fb7185; margin-bottom: 1rem; text-shadow: 0 0 10px #e11d48; animation: bounce 2s infinite;">
+            Congratulations! 🎉</h1>
+        <div
+            style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 2rem; border-radius: 20px; border: 2px solid #fb7185; max-width: 600px; box-shadow: 0 0 30px rgba(225, 29, 72, 0.5);">
+            <p style="font-size: 1.5rem; margin-bottom: 1.5rem; line-height: 1.6;">
+                You win the gift! 🎁<br>
+                <span style="color: #fecdd3; font-size: 1.2rem;">Take a screenshot and send me to get the gift on 14th
+                    Feb 📸😉</span>
+            </p>
+            <p style="font-family: 'Dancing Script'; font-size: 2rem; color: #ffe4e6; margin-bottom: 2rem;">
+                You have won extra gifts:<br>Lifetime Kisses, Hugs & Cuddles! 💋🤗
+            </p>
+            <button id="continue-btn" class="btn"
+                style="background: #e11d48; color: white; font-size: 1.2rem; transform: scale(1.1);">Collect Rewards
+                💖</button>
+        </div>
+    </div>
+    <script>const body = document.body;
+        const errorView = document.getElementById('error-view');
+        const valentineView = document.getElementById('valentine-view');
+        const loadingView = document.getElementById('loading-view');
+        const cardOverlay = document.getElementById('card-overlay');
+        const endView = document.getElementById('end-view');
+        const backBtn = document.getElementById('back-btn');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const heartBg = document.getElementById('heart-bg');
+
+        // Custom Music Logic
+        const bgMusic = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-btn');
+        let isMusicPlaying = false;
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicBtn.classList.remove('playing');
+                musicBtn.innerHTML = "💿"; // Stopped icon
+            } else {
+                bgMusic.play().then(() => {
+                    musicBtn.classList.add('playing');
+                    musicBtn.innerHTML = "🎵"; // Playing icon
+                }).catch(e => console.log("Audio play failed:", e));
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMusic();
+        });
+
+        // Auto-Play Attempt on Interaction (Unlock Audio)
+        const unlockAudio = () => {
+            if (!isMusicPlaying) {
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    musicBtn.classList.add('playing');
+                    musicBtn.innerHTML = "🎵";
+                }).catch(() => {
+                    console.log("Autoplay blocked, waiting for interaction");
+                });
+            }
+            // Remove listener after first interaction attempt
+            document.removeEventListener('click', unlockAudio);
+        };
+
+        // Try to play immediately (might be blocked)
+        bgMusic.play().then(() => {
+            isMusicPlaying = true;
+            musicBtn.classList.add('playing');
+            musicBtn.innerHTML = "🎵";
+        }).catch(() => {
+            // If blocked, wait for first click
+            document.addEventListener('click', unlockAudio, { once: true });
+        });
+
+        // Quiz Elements
+        const giftIcon = document.getElementById('gift-icon');
+        const quizOverlay = document.getElementById('quiz-overlay');
+        const closeQuizBtn = document.getElementById('close-quiz');
+        const quizContainer = document.getElementById('quiz-container');
+        const claimGiftBtn = document.getElementById('claim-gift-btn');
+        const giftHint = document.querySelector('.gift-hint');
+
+        let clickCount = 0;
+        let yesScale = 1;
+        let isSpotifyVisible = false;
+        let noBtnSize = 1.0;
+
+        // Sound & Music
+        const spotifyEmbeds = {
+            'breathless': '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/0np3m3ZA3ujWO5IHUqWFLW?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
+            'thousand': '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6lanRgr6wXibZr8KgzXxBl?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
+            'perfect': '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/0tgVpDi06FyKpA1z0VMD4v?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>'
+        }
+
+            ;
+
+        spotifyContainer.innerHTML = spotifyEmbeds['breathless'];
+
+        toggleSpotifyBtn.addEventListener('click', () => {
+            musicHint.style.display = 'none';
+            isSpotifyVisible = !isSpotifyVisible;
+
+            if (isSpotifyVisible) {
+                spotifyContainer.classList.add('show');
+            }
+
+            else {
+                spotifyContainer.classList.remove('show');
+            }
+        });
+
+        songSelect.addEventListener('change', (e) => {
+            musicHint.style.display = 'none';
+            const songKey = e.target.value;
+            spotifyContainer.innerHTML = spotifyEmbeds[songKey];
+
+            if (!isSpotifyVisible) {
+                isSpotifyVisible = true;
+                spotifyContainer.classList.add('show');
+            }
+        });
+
+        // Quiz Logic
+        const questions = [{
+            q: "Our first cafe name?", a: ["nook", "nook cafe"]
+        }
+
+            ,
+        {
+            q: "The gift that i gave you on your birthday?", a: ["flower", "flowers", "bouquet", "handmade", "flower bouquet"]
+        }
+
+            ,
+        {
+            q: "Remember our first long bike ride? what is that beach?", a: ["kaluthara", "kaluthara beach"]
+        }
+
+            ,
+        {
+            q: "What is the lovely nick name i gave you?", a: ["puchi", "puchi chang", "chang"]
+        }
+
+            ,
+        {
+            q: "What is the date of our first night stay? (Date.Month.Year)", a: ["04/02/2026", "0402.2026", "04:02:2026", "04.02.2026"]
+        }
+
+        ];
+
+        let correctAnswers = 0;
+
+        // Removed initial giftIcon listener as requested
+
+        closeQuizBtn.addEventListener('click', () => {
+            quizOverlay.classList.remove('open');
+            // If they close the quiz early, maybe show the gift view again?
+            const giftView = document.getElementById('gift-view');
+            if (giftView) {
+                giftView.classList.remove('hidden');
+                giftView.style.display = 'flex';
+            }
+        });
+
+        function renderQuiz() {
+            quizContainer.innerHTML = '';
+            correctAnswers = 0;
+
+            questions.forEach((item, index) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'quiz-question';
+
+                qDiv.innerHTML = `
+                    <label>${index + 1}. ${item.q}</label>
+                    <input type="text" placeholder="Type answer..." oninput="checkAnswer(${index}, this.value)">
+                    <div class="feedback-msg" id="feedback-${index}"></div>
+                `;
+                quizContainer.appendChild(qDiv);
+            });
+        }
+
+        window.checkAnswer = function (index, value) {
+            const feedbackParams = document.getElementById(`feedback-${index}`);
+            const inputField = feedbackParams.previousElementSibling;
+            const parent = inputField.parentElement;
+
+            const userVal = value.toLowerCase().trim();
+            const possibleAnswers = questions[index].a.map(ans => ans.toLowerCase());
+
+            // Check if any keyword matches
+            const isCorrect = possibleAnswers.some(ans => userVal.includes(ans) || ans.includes(userVal));
+
+            // Strict length check to avoid false positives on short inputs
+            if (userVal.length < 3) {
+                parent.className = 'quiz-question';
+                feedbackParams.innerText = '';
+                return;
+            }
+
+            if (isCorrect) {
+                if (!parent.classList.contains('correct')) {
+                    parent.className = 'quiz-question correct';
+                    feedbackParams.className = 'feedback-msg correct';
+                    feedbackParams.innerText = 'Correct! ✅';
+                    checkAllCorrect();
+                }
+            }
+
+            else {
+                parent.className = 'quiz-question wrong';
+                feedbackParams.className = 'feedback-msg wrong';
+                feedbackParams.innerText = 'Try again! ❌';
+            }
+        }
+
+            ;
+
+        function checkAllCorrect() {
+            const correctCount = document.querySelectorAll('.quiz-question.correct').length;
+
+            if (correctCount === questions.length) {
+                claimGiftBtn.classList.remove('hidden');
+                triggerConfetti();
+            }
+        }
+
+        // Logic handled in the main flow setup below
+
+        // Heart Trail (Optimized)
+        let lastTrailTime = 0;
+        const isMobile = 'ontouchstart' in window;
+
+        if (!isMobile) {
+            document.addEventListener('mousemove', (e) => {
+                const now = Date.now();
+
+                if (now - lastTrailTime > 80) {
+                    createTrailHeart(e.clientX, e.clientY);
+                    lastTrailTime = now;
+                }
+            });
+        }
+
+        function createTrailHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-trail');
+            heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
+            const offsetX = (Math.random() - 0.5) * 15;
+            const offsetY = (Math.random() - 0.5) * 15;
+            heart.style.left = (x + offsetX) + 'px';
+            heart.style.top = (y + offsetY) + 'px';
+            body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1000);
+        }
+
+        // Magic Aura
+        document.addEventListener('mousemove', (e) => {
+            if (getComputedStyle(valentineView).display === 'none') return;
+            const btnRect = yesBtn.getBoundingClientRect();
+            const btnCenterX = btnRect.left + btnRect.width / 2;
+            const btnCenterY = btnRect.top + btnRect.height / 2;
+            const dist = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
+
+            if (dist < 200) {
+                const intensity = 1 - (dist / 200);
+
+                yesBtn.style.boxShadow = `0 0 $ {
+                        20 * intensity + 10
+                    }
+
+                    px $ {
+                        5 * intensity
+                    }
+
+                    px rgba(16, 185, 129, $ {
+                            0.5 + 0.5 * intensity
+                        })`;
+
+                yesBtn.style.transform = `scale($ {
+                            yesScale + (0.05 * intensity)
+                        })`;
+            }
+
+            else {
+                yesBtn.style.boxShadow = `0 0 15px rgba(16, 185, 129, 0.5)`;
+
+                yesBtn.style.transform = `scale($ {
+                            yesScale
+                        })`;
+            }
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-bit');
+            heart.innerHTML = Math.random() > 0.5 ? '❤️' : '🌹';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 10 + 5 + 's';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            heartBg.appendChild(heart);
+            setTimeout(() => heart.remove(), 15000);
+        }
+
+        setInterval(createHeart, 800);
+
+        refreshBtn.addEventListener('click', () => {
+            errorView.classList.replace('visible', 'hidden');
+
+            setTimeout(() => {
+                errorView.style.display = 'none';
+                valentineView.style.display = 'block';
+
+                requestAnimationFrame(() => {
+                    valentineView.classList.replace('hidden', 'visible');
+                });
+            }
+
+                , 500);
+        });
+
+        // New No Button Messages
+        const noMessages = ["Are you sure???",
+            "Please think again!!!!",
+            "Want some chocolates???",
+            "What if I gave you flowers?",
+            "Please.. please.. please...",
+            "Pleasee Puchiiii",
+            "NO NO NOO",
+            "I'm going to cry now",
+            "Select Yes Or I will bite your Booty",
+            "You are breaking my little heart",
+            "No Puchi No..",
+            "Aneee Pleaseee Puchiiii",
+            "Menna Mehe Enawa",
+            "Hu Huu Huu"
+        ];
+
+        noBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            // Set text first based on current count
+            if (clickCount < noMessages.length) {
+                noBtn.innerText = noMessages[clickCount];
+            }
+
+            clickCount++;
+
+            // If we exceeded messages, hide button
+            if (clickCount > noMessages.length) {
+                noBtn.style.display = 'none';
+                return;
+            }
+
+            noBtn.classList.remove('shake');
+            void noBtn.offsetWidth;
+            noBtn.classList.add('shake');
+
+            // Limit shrink
+            if (noBtnSize > 0.5) {
+                noBtnSize -= 0.05; // Slower shrink
+                noBtn.style.fontSize = `${noBtnSize}rem`;
+            }
+
+            moveButton();
+
+            // Strict scaling formula as requested
+            yesScale = 1 + (clickCount * 0.2);
+            yesBtn.style.transform = `scale(${yesScale})`;
+        });
+
+        // Phase 2: Mouseover Evasion
+        noBtn.addEventListener('mouseover', (e) => {
+            // Only evade after a few clicks (Phase 2), e.g., after 5 clicks
+            if (clickCount > 5) {
+                moveButton();
+            }
+        });
+
+        yesBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            valentineView.classList.replace('visible', 'hidden');
+
+            setTimeout(() => {
+                valentineView.style.display = 'none';
+            }
+
+                , 500);
+            loadingView.classList.replace('hidden', 'visible');
+            loadingView.style.display = 'flex';
+
+            setTimeout(() => {
+                loadingView.style.display = 'none';
+                cardOverlay.classList.remove('hidden');
+                cardOverlay.classList.add('open');
+
+                // Trigger 3D Book Opening
+                const bookCover = document.querySelector('.page.cover');
+
+                if (bookCover) {
+
+                    // Slight delay to allow layout to settle
+                    setTimeout(() => {
+                        bookCover.classList.add('open');
+                    }
+
+                        , 500);
+                }
+
+                triggerConfetti();
+            }
+
+                , 3000);
+        });
+
+        // Close Card -> Open Gift View (New Logic)
+        backBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const bookCover = document.querySelector('.page.cover');
+            if (bookCover) bookCover.classList.remove('open');
+
+            setTimeout(() => {
+                cardOverlay.classList.remove('open');
+                cardOverlay.classList.add('hidden');
+
+                // Show Gift View
+                const giftView = document.getElementById('gift-view');
+                if (giftView) {
+                    giftView.classList.remove('hidden');
+                    giftView.style.display = 'flex';
+                    requestAnimationFrame(() => {
+                        giftView.classList.add('visible');
+                    });
+                }
+            }, 500);
+        });
+
+        // Open Gift -> Start Quiz
+        const openGiftTrigger = document.getElementById('open-gift-trigger');
+        if (openGiftTrigger) {
+            openGiftTrigger.addEventListener('click', () => {
+                const giftView = document.getElementById('gift-view');
+                giftView.classList.add('hidden');
+                giftView.style.display = 'none';
+
+                quizOverlay.classList.add('open');
+                renderQuiz();
+            });
+        }
+
+        // Claim Gift -> Show Success Overlay
+        if (claimGiftBtn) {
+            claimGiftBtn.addEventListener('click', () => {
+                quizOverlay.classList.remove('open');
+
+                // Show Custom Success Overlay
+                const successOverlay = document.getElementById('success-overlay');
+                successOverlay.classList.remove('hidden');
+                successOverlay.style.display = 'flex';
+
+                triggerConfetti();
+            });
+        }
+
+        // Continue from Success Overlay -> End Screen
+        document.getElementById('continue-btn').addEventListener('click', () => {
+            document.getElementById('success-overlay').style.display = 'none';
+
+            // Show End Screen
+            endView.classList.replace('hidden', 'visible');
+            endView.style.display = 'flex';
+
+            // Reset logic
+            const resetApp = () => {
+                endView.style.display = 'none';
+                clickCount = 0;
+                yesScale = 1;
+                noBtnSize = 1;
+                noBtn.style.position = 'relative';
+                noBtn.style.left = 'auto';
+                noBtn.style.top = 'auto';
+                noBtn.style.fontSize = '1.25rem';
+                noBtn.innerText = "NO";
+                noBtn.style.display = 'inline-block';
+                yesBtn.style.transform = 'scale(1)';
+                errorView.style.display = 'block';
+                requestAnimationFrame(() => {
+                    errorView.classList.replace('hidden', 'visible');
+                });
+                endView.removeEventListener('click', resetApp);
+            };
+            setTimeout(() => {
+                endView.addEventListener('click', resetApp);
+            }, 500);
+        });
+
+        function moveButton() {
+            if (noBtn.parentNode !== valentineView) {
+                valentineView.appendChild(noBtn);
+                noBtn.style.position = 'absolute';
+            }
+
+            const cardRect = valentineView.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            const yesRect = yesBtn.getBoundingClientRect();
+
+            const padding = 20;
+
+            const maxX = cardRect.width - btnRect.width - padding;
+            const maxY = cardRect.height - btnRect.height - padding;
+
+            let newX,
+                newY;
+            let overlapping = true;
+            let attempts = 0;
+
+            const yesLeftInCard = yesRect.left - cardRect.left;
+            const yesTopInCard = yesRect.top - cardRect.top;
+
+            while (overlapping && attempts < 50) {
+                newX = padding + Math.random() * (maxX - padding);
+                newY = padding + Math.random() * (maxY - padding);
+
+                const buffer = 20;
+
+                if (newX < (yesLeftInCard + yesRect.width + buffer) && newX + btnRect.width > (yesLeftInCard - buffer) && newY < (yesTopInCard + yesRect.height + buffer) && newY + btnRect.height > (yesTopInCard - buffer)) {
+                    overlapping = true;
+                }
+
+                else {
+                    overlapping = false;
+                }
+
+                attempts++;
+            }
+
+            noBtn.style.left = `${newX}px`;
+            noBtn.style.top = `${newY}px`;
+
+            // Random Gradient for No Button
+            const hues = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
+            const hue1 = hues[Math.floor(Math.random() * hues.length)];
+            const hue2 = (hue1 + 40) % 360;
+            noBtn.style.background = `linear-gradient(135deg, hsl(${hue1}, 80%, 60%), hsl(${hue2}, 80%, 60%))`;
+        }
+
+        function triggerConfetti() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+
+            var defaults = {
+                startVelocity: 30, spread: 360, ticks: 60, zIndex: 3000
+            }
+
+                ;
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function () {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+
+                confetti(Object.assign({}
+
+                    , defaults, {
+                    particleCount, origin: {
+                        x: randomInRange(0.1, 0.3), y: Math.random() - 0.2
+                    }
+                }));
+
+                confetti(Object.assign({}
+
+                    , defaults, {
+                    particleCount, origin: {
+                        x: randomInRange(0.7, 0.9), y: Math.random() - 0.2
+                    }
+                }));
+            }
+
+                , 250);
+        }
+
+    </script>
+</body>
+
+</html>
